@@ -1,62 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Shop
 {
-    class Product
+    public class Product
     {
-        public string title;
-        public string description;
-        public int price;
-        public int stock;
-        public string id;
-        public string key;
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+        public string Id { get; set; }
+        public string Key = Guid.NewGuid().ToString();
 
-        Guid keyGen = Guid.NewGuid();
-
-        public Product() : this("empty", "empty", 0, 0, "")
+        public Product(string title = "empty", string description = "empty", decimal price = 0, int stock = 0, string id = "")
         {
-        }
-
-        public Product(string title) : this(title, "empty", 0, 0, "")
-        {
-        }
-
-        public Product(string title, string description) : this(title, description, 0, 0, "")
-        {
-        }
-
-        public Product(string title, string description, int price) : this(title, description, price, 0, "")
-        {
-        }
-
-        public Product(string title, string description, int price, int stock) : this(title, description, price, stock, "")
-        {
-        }
-
-        public Product(string title, string description, int price, int stock, string id)
-        {
-            this.title = title;
-            this.description = description;
-            this.price = price;
-            this.stock = stock;
-            this.id = id;
-            key = keyGen.ToString();
+            Title = title;
+            Description = description;
+            Price = price;
+            Stock = stock;
+            Id = id;
         }
 
         public void ShowProduct()
         {
             Console.WriteLine
                 (
-                $"Название: {title} \n" +
-                $"Описание: {description} \n" +
-                $"Стоимость: {price}p \n" +
-                $"Количество на складе: {stock}шт \n" +
-                $"Ключ: {key}\n" +
-                $"ID: {id} \n"
+                $"Название: {Title} \n" +
+                $"Описание: {Description} \n" +
+                $"Стоимость: {Price.ToString("C", CultureInfo.CurrentCulture)} \n" +
+                $"Количество на складе: {Stock}шт \n" +
+                $"Ключ: {Key}\n" +
+                $"ID: {Id} \n"
                 );
         }
     }
