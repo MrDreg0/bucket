@@ -14,7 +14,7 @@ namespace Shop
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string Id { get; set; }
-        public string Key = Guid.NewGuid().ToString();
+        public Guid Key { get; set; } = Guid.NewGuid();
 
         public Product(string title = "empty", string description = "empty", decimal price = 0, int stock = 0, string id = "")
         {
@@ -31,7 +31,7 @@ namespace Shop
                 (
                 $"Название: {Title} \n" +
                 $"Описание: {Description} \n" +
-                $"Стоимость: {Price.ToString("C", CultureInfo.CurrentCulture)} \n" +
+                $"Стоимость: {Price:C} \n" +
                 $"Количество на складе: {Stock}шт \n" +
                 $"Ключ: {Key}\n" +
                 $"ID: {Id} \n"

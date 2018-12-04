@@ -11,6 +11,7 @@ namespace Shop
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             ConsoleKeyInfo cki;
             var bucket = new List<ProductBucket>();
             var products = new[]
@@ -68,9 +69,9 @@ namespace Shop
                 switch (keyPress)
                 {
                     case "1":
-                        foreach (var p in products)
+                        foreach (var product in products)
                         {
-                            p.ShowProduct();
+                            product.ShowProduct();
                         }
                         break;
 
@@ -82,7 +83,7 @@ namespace Shop
 
                     case "3":
                         Console.Write("Введите ключ товара: ");
-                        string key = Console.ReadLine();
+                        Guid key = Guid.Parse(Console.ReadLine());
                         AddToBucketByKey(products, bucket, findKey: key);
                         break;
 
@@ -99,13 +100,13 @@ namespace Shop
 
                     case "6":
                         Console.Write("Введите ключ удаляемого товара: ");
-                        string delKey = Console.ReadLine();
+                        Guid delKey = Guid.Parse(Console.ReadLine());
                         DelInBucket(bucket, findKey: delKey);
                         break;
 
                     case "7":
                         Console.Write("Введите ключ товара: ");
-                        string addKey = Console.ReadLine();
+                        Guid addKey = Guid.Parse(Console.ReadLine());
                         ChangeInBucket(bucket, findKey: addKey);
                         break;
 
@@ -146,13 +147,12 @@ namespace Shop
             }
 
             var foundProduct = new List<Product>();
-            for (int i = 0; i < products.Length; i++)
-            {
-                string productTitle = products[i].Title.ToLower();
 
-                if (productTitle.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
+            foreach (var product in products)
+            {
+                if (product.Title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
-                    foundProduct.Add(products[i]);
+                    foundProduct.Add(product);
                 }
             }
 
@@ -170,15 +170,15 @@ namespace Shop
             }
         }
 
-        static void AddToBucketByKey(Product[] products, List<ProductBucket> bucket, string findKey = "", string findID = "")
+        static void AddToBucketByKey(Product[] products, IList<ProductBucket> bucket, Guid findKey = new Guid(), string findID = "")
         {
-            if (String.IsNullOrEmpty(findKey) && String.IsNullOrEmpty(findID))
+            if (findKey.Equals(Guid.Empty) && String.IsNullOrEmpty(findID))
             {
                 Console.WriteLine("Вы ничего не ввели.");
                 return;
             }
 
-            var productInList = SearchInProductList(products, findKey, findID);
+            var productInList = TryGetFromProductList(products, findKey, findID);
 
             if (productInList == null)
             {
@@ -186,7 +186,7 @@ namespace Shop
                 return;
             }
 
-            var productInBucket = SearchInBucket(bucket, findKey, findID);
+            var productInBucket = TryGetFromBucket(bucket, findKey, findID);
 
             if (productInBucket != null)
             {
@@ -197,7 +197,7 @@ namespace Shop
             AddToBucket(bucket, productInList);
         }
 
-        static void AddToBucket (List<ProductBucket> bucket, Product product)
+        static void AddToBucket (IList<ProductBucket> bucket, Product product)
         {
             ProductBucket productBucket = new ProductBucket
             {
@@ -211,15 +211,15 @@ namespace Shop
             Console.WriteLine("\nТовар добавлен!\n");
         }
 
-        static void DelInBucket(List<ProductBucket> bucket, string findKey)
+        static void DelInBucket(List<ProductBucket> bucket, Guid findKey)
         {
-            if (String.IsNullOrEmpty(findKey))
+            if (findKey.Equals(Guid.Empty))
             {
                 Console.WriteLine("Вы ничего не ввели.");
                 return;
             }
 
-            var item = SearchInBucket(bucket, findKey);
+            var item = TryGetFromBucket(bucket, findKey);
             if (item == null)
             {
                 Console.WriteLine("\nТовар не найден\n");
@@ -229,7 +229,7 @@ namespace Shop
             Console.WriteLine("\nТовар удален\n");
         }
 
-        static Product SearchInProductList (Product[] products, string findKey, string findId = "")
+        static Product TryGetFromProductList (Product[] products, Guid findKey, string findId = "")
         {
             foreach (var product in products)
             {
@@ -241,7 +241,7 @@ namespace Shop
             return null;
         }
 
-        static ProductBucket SearchInBucket (List<ProductBucket> bucket, string findKey, string findId = "")
+        static ProductBucket TryGetFromBucket (IList<ProductBucket> bucket, Guid findKey, string findId = "")
         {
             foreach (var product in bucket)
             {
@@ -253,9 +253,9 @@ namespace Shop
             return null;
         }
 
-        static void ChangeInBucket(List<ProductBucket> bucket, string findKey = "")
+        static void ChangeInBucket(List<ProductBucket> bucket, Guid findKey)
         {
-            if (String.IsNullOrEmpty(findKey))
+            if (findKey.Equals(Guid.Empty))
             {
                 Console.WriteLine("Вы ничего не ввели.");
                 return;
@@ -267,6 +267,7 @@ namespace Shop
                 {
                     product.IncrementAmount();
                     Console.WriteLine("Товар добавлен");
+                    return;
                 }
             }
         }
@@ -276,10 +277,11 @@ namespace Shop
             if (bucket.Count() == 0)
             {
                 Console.WriteLine("\nВ корзине нет товаров.");
+                return;
             }
 
-            decimal sumCost = 0;
-            int sumAmount = 0;
+            var sumCost = 0M;
+            var sumAmount = 0;
             foreach (ProductBucket p in bucket)
             {
                 sumCost += p.Cost;
