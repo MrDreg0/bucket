@@ -14,7 +14,7 @@ namespace Shop
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string Id { get; set; }
-        public Guid Key { get; set; } = Guid.NewGuid();
+        public Guid Key { get; } = Guid.NewGuid();
 
         public Product(string title = "empty", string description = "empty", decimal price = 0, int stock = 0, string id = "")
         {
