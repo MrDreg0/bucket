@@ -144,6 +144,7 @@ namespace Shop
             if (substring.Length == 0)
             {
                 Console.WriteLine("Вы ничего не ввели.");
+                return;
             }
 
             var foundProduct = new List<Product>();
@@ -162,7 +163,7 @@ namespace Shop
             }
             else
             {
-                Console.WriteLine("\nНайдено товаров: \n", foundProduct.Count());
+                Console.WriteLine("\nНайдено товаров: {0} \n", foundProduct.Count());
                 foreach (Product product in foundProduct)
                 {
                     product.ShowProduct();
@@ -170,7 +171,7 @@ namespace Shop
             }
         }
 
-        static void AddToBucketByKey(Product[] products, IList<ProductBucket> bucket, Guid findKey = new Guid(), string findID = "")
+        static void AddToBucketByKey(Product[] products, IList<ProductBucket> bucket, Guid findKey = default, string findID = "")
         {
             if (findKey.Equals(Guid.Empty) && String.IsNullOrEmpty(findID))
             {

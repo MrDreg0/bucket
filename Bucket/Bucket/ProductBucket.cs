@@ -11,7 +11,7 @@ namespace Shop
         public decimal Price { get; set; }
         public int Amount { get; set; }
         public decimal Cost { get => Amount * Price; }
-        public DateTime Date { get => DateTime.Now; }
+        public DateTime Date { get; } = DateTime.Now; 
 
         public ProductBucket(Guid key = new Guid(), string title = "empty", decimal price = 0, string id = "")
         {
