@@ -13,7 +13,9 @@ namespace Shop
         {
             Console.OutputEncoding = Encoding.UTF8;
             ConsoleKeyInfo cki;
-            var bucket = new List<ProductBucket>();
+            var listProductsInBucket = new List<Bucket>();
+            var product = new Product();
+            var bucket = new Bucket();
             var products = new[]
             {
                 new Product
@@ -63,55 +65,53 @@ namespace Shop
             do
             {
                 cki = Console.ReadKey();
-
                 var keyPress = cki.KeyChar.ToString();
-
                 switch (keyPress)
                 {
                     case "1":
-                        foreach (var product in products)
+                        foreach (var currentProduct in products)
                         {
-                            product.ShowProduct();
+                            currentProduct.ShowProduct();
                         }
                         break;
 
                     case "2":
                         Console.Write("Введите строку для поиска: ");
-                        string s = Console.ReadLine();
-                        SearchProducts(s, products);
+                        string substring = Console.ReadLine();
+                        product.SearchProducts(substring, products);
                         break;
 
                     case "3":
                         Console.Write("Введите ключ товара: ");
                         Guid key = Guid.Parse(Console.ReadLine());
-                        AddToBucketByKey(products, bucket, findKey: key);
+                        bucket.AddToBucketByKey(products, listProductsInBucket, findKey: key);
                         break;
 
                     case "4":
                         Console.Write("Введите ID товара: ");
                         string id = Console.ReadLine();
-                        AddToBucketByKey(products, bucket, findID: id);
+                        bucket.AddToBucketByKey(products, listProductsInBucket, findID: id);
                         break;
 
                     case "5":
                         Console.Write("Корзина товаров: \n");
-                        ShowBucket(bucket);
+                        bucket.ShowBucket(listProductsInBucket);
                         break;
 
                     case "6":
                         Console.Write("Введите ключ удаляемого товара: ");
                         Guid delKey = Guid.Parse(Console.ReadLine());
-                        DelInBucket(bucket, findKey: delKey);
+                        bucket.DelInBucket(listProductsInBucket, findKey: delKey);
                         break;
 
                     case "7":
                         Console.Write("Введите ключ товара: ");
                         Guid addKey = Guid.Parse(Console.ReadLine());
-                        ChangeInBucket(bucket, findKey: addKey);
+                        bucket.ChangeInBucket(listProductsInBucket, findKey: addKey);
                         break;
 
                     case "8":
-                        bucket.Clear();
+                        listProductsInBucket.Clear();
                         Console.WriteLine("\nКорзина очищена\n");
                         break;
 
@@ -137,164 +137,6 @@ namespace Shop
                 $"'0' Показать меню\n" +
                 $"\n*****************************"
             );
-        }
-
-        static void SearchProducts(string substring, Product[] products)
-        {
-            if (substring.Length == 0)
-            {
-                Console.WriteLine("Вы ничего не ввели.");
-                return;
-            }
-
-            var foundProduct = new List<Product>();
-
-            foreach (var product in products)
-            {
-                if (product.Title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
-                {
-                    foundProduct.Add(product);
-                }
-            }
-
-            if (foundProduct.Count() == 0)
-            {
-                Console.WriteLine("Товаров по Вашему запросу не найдено.");
-            }
-            else
-            {
-                Console.WriteLine("\nНайдено товаров: {0} \n", foundProduct.Count());
-                foreach (Product product in foundProduct)
-                {
-                    product.ShowProduct();
-                }
-            }
-        }
-
-        static void AddToBucketByKey(Product[] products, IList<ProductBucket> bucket, Guid findKey = default, string findID = "")
-        {
-            if (findKey.Equals(Guid.Empty) && String.IsNullOrEmpty(findID))
-            {
-                Console.WriteLine("Вы ничего не ввели.");
-                return;
-            }
-
-            var productInList = TryGetFromProductList(products, findKey, findID);
-
-            if (productInList == null)
-            {
-                Console.WriteLine("Товар не найден.");
-                return;
-            }
-
-            var productInBucket = TryGetFromBucket(bucket, findKey, findID);
-
-            if (productInBucket != null)
-            {
-                productInBucket.IncrementAmount();
-                Console.WriteLine("\nТовар добавлен!\n");
-                return;
-            }    
-            AddToBucket(bucket, productInList);
-        }
-
-        static void AddToBucket (IList<ProductBucket> bucket, Product product)
-        {
-            ProductBucket productBucket = new ProductBucket
-            {
-                Key = product.Key,
-                Title = product.Title,
-                Price = product.Price,
-                Id = product.Id
-            };
-            productBucket.IncrementAmount();
-            bucket.Add(productBucket);
-            Console.WriteLine("\nТовар добавлен!\n");
-        }
-
-        static void DelInBucket(List<ProductBucket> bucket, Guid findKey)
-        {
-            if (findKey.Equals(Guid.Empty))
-            {
-                Console.WriteLine("Вы ничего не ввели.");
-                return;
-            }
-
-            var item = TryGetFromBucket(bucket, findKey);
-            if (item == null)
-            {
-                Console.WriteLine("\nТовар не найден\n");
-                return;
-            }
-            bucket.Remove(item);
-            Console.WriteLine("\nТовар удален\n");
-        }
-
-        static Product TryGetFromProductList (Product[] products, Guid findKey, string findId = "")
-        {
-            foreach (var product in products)
-            {
-                if (findKey == product.Key || findId == product.Id)
-                {
-                    return product;
-                }
-            }
-            return null;
-        }
-
-        static ProductBucket TryGetFromBucket (IList<ProductBucket> bucket, Guid findKey, string findId = "")
-        {
-            foreach (var product in bucket)
-            {
-                if (findKey == product.Key || findId == product.Id)
-                {
-                    return product;
-                }
-            }
-            return null;
-        }
-
-        static void ChangeInBucket(List<ProductBucket> bucket, Guid findKey)
-        {
-            if (findKey.Equals(Guid.Empty))
-            {
-                Console.WriteLine("Вы ничего не ввели.");
-                return;
-            }
-
-            foreach (var product in bucket)
-            {
-                if (findKey == product.Key)
-                {
-                    product.IncrementAmount();
-                    Console.WriteLine("Товар добавлен");
-                    return;
-                }
-            }
-        }
-
-        static void ShowBucket(List<ProductBucket> bucket)
-        {
-            if (bucket.Count() == 0)
-            {
-                Console.WriteLine("\nВ корзине нет товаров.");
-                return;
-            }
-
-            var sumCost = 0M;
-            var sumAmount = 0;
-            foreach (ProductBucket p in bucket)
-            {
-                sumCost += p.Cost;
-                sumAmount += p.Amount;
-                p.ShowProductBucket();
-            }
-            Console.WriteLine
-                (
-                    $"-------------------------------------------" +
-                    $"\nКоличество товаров в корзине: " + sumAmount +
-                    $"\nОбщая стоимость: " + sumCost + "\n"
-                );
         }
     }
 }

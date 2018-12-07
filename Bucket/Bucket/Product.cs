@@ -37,5 +37,47 @@ namespace Shop
                 $"ID: {Id} \n"
                 );
         }
+
+        public void SearchProducts(string substring, Product[] products)
+        {
+            if (substring.Length == 0)
+            {
+                Console.WriteLine("Вы ничего не ввели.");
+                return;
+            }
+
+            var foundProduct = new List<Product>();
+
+            foreach (var product in products)
+            {
+                if (product.Title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
+                {
+                    foundProduct.Add(product);
+                }
+            }
+
+            if (foundProduct.Count() == 0)
+            {
+                Console.WriteLine("Товаров по Вашему запросу не найдено.");
+                return;
+            }
+            Console.WriteLine("\nНайдено товаров: {0} \n", foundProduct.Count());
+            foreach (Product product in foundProduct)
+            {
+                product.ShowProduct();
+            }
+        }
+
+        public Product TryGetFromProductList(Product[] products, Guid findKey, string findId = "")
+        {
+            foreach (var product in products)
+            {
+                if (findKey == product.Key || findId == product.Id)
+                {
+                    return product;
+                }
+            }
+            return null;
+        }
     }
 }
