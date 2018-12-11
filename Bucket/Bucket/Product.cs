@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,75 +8,31 @@ namespace Shop
 {
     public class Product
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
-        public string Id { get; set; }
-        public Guid Key { get; } = Guid.NewGuid();
+        public string _title { get; set; }
+        public string _description { get; set; }
+        public decimal _price { get; set; }
+        public int _stock { get; set; }
+        public string _id { get; set; }
+        public Guid _key { get; } = Guid.NewGuid();
 
         public Product(string title = "empty", string description = "empty", decimal price = 0, int stock = 0, string id = "")
         {
-            Title = title;
-            Description = description;
-            Price = price;
-            Stock = stock;
-            Id = id;
+            _title = title;
+            _description = description;
+            _price = price;
+            _stock = stock;
+            _id = id;
         }
 
-        public void ShowProduct()
-        {
+        public void ShowProduct() =>
             Console.WriteLine
                 (
-                $"Название: {Title} \n" +
-                $"Описание: {Description} \n" +
-                $"Стоимость: {Price:C} \n" +
-                $"Количество на складе: {Stock}шт \n" +
-                $"Ключ: {Key}\n" +
-                $"ID: {Id} \n"
+                $"Название: {_title} \n" +
+                $"Описание: {_description} \n" +
+                $"Стоимость: {_price:C} \n" +
+                $"Количество на складе: {_stock}шт \n" +
+                $"Ключ: {_key}\n" +
+                $"ID: {_id} \n"
                 );
-        }
-
-        public void SearchProducts(string substring, Product[] products)
-        {
-            if (substring.Length == 0)
-            {
-                Console.WriteLine("Вы ничего не ввели.");
-                return;
-            }
-
-            var foundProduct = new List<Product>();
-
-            foreach (var product in products)
-            {
-                if (product.Title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
-                {
-                    foundProduct.Add(product);
-                }
-            }
-
-            if (foundProduct.Count() == 0)
-            {
-                Console.WriteLine("Товаров по Вашему запросу не найдено.");
-                return;
-            }
-            Console.WriteLine("\nНайдено товаров: {0} \n", foundProduct.Count());
-            foreach (Product product in foundProduct)
-            {
-                product.ShowProduct();
-            }
-        }
-
-        public Product TryGetFromProductList(Product[] products, Guid findKey, string findId = "")
-        {
-            foreach (var product in products)
-            {
-                if (findKey == product.Key || findId == product.Id)
-                {
-                    return product;
-                }
-            }
-            return null;
-        }
     }
 }
