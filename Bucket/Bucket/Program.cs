@@ -36,13 +36,13 @@ namespace Shop
                     case "3":
                         Console.Write("Введите ключ товара: ");
                         Guid key = Guid.Parse(Console.ReadLine());
-                        cart.AddToCartByKey(findKey: key);
+                        cart.AddItemByKey(productKey: key);
                         break;
 
                     case "4":
                         Console.Write("Введите ID товара: ");
                         string id = Console.ReadLine();
-                        cart.AddToCartByKey(findID: id);
+                        cart.AddItemByKey(findID: id);
                         break;
 
                     case "5":
@@ -59,7 +59,7 @@ namespace Shop
                     case "7":
                         Console.Write("Введите ключ товара: ");
                         Guid addKey = Guid.Parse(Console.ReadLine());
-                        cart.ChangeInCart(findKey: addKey);
+                        cart.IncrementItemAmount(findKey: addKey);
                         break;
 
                     case "8":

@@ -8,31 +8,31 @@ namespace Shop
 {
     public class Product
     {
-        public string _title { get; set; }
-        public string _description { get; set; }
-        public decimal _price { get; set; }
-        public int _stock { get; set; }
-        public string _id { get; set; }
-        public Guid _key { get; } = Guid.NewGuid();
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+        public string Id { get; set; }
+        public Guid Key { get; } = Guid.NewGuid();
 
         public Product(string title = "empty", string description = "empty", decimal price = 0, int stock = 0, string id = "")
         {
-            _title = title;
-            _description = description;
-            _price = price;
-            _stock = stock;
-            _id = id;
+            Title = title;
+            Description = description;
+            Price = price;
+            Stock = stock;
+            Id = id;
         }
 
         public void ShowProduct() =>
             Console.WriteLine
                 (
-                $"Название: {_title} \n" +
-                $"Описание: {_description} \n" +
-                $"Стоимость: {_price:C} \n" +
-                $"Количество на складе: {_stock}шт \n" +
-                $"Ключ: {_key}\n" +
-                $"ID: {_id} \n"
+                $"Название: {Title} \n" +
+                $"Описание: {Description} \n" +
+                $"Стоимость: {Price:C} \n" +
+                $"Количество на складе: {Stock}шт \n" +
+                $"Ключ: {Key}\n" +
+                $"ID: {Id} \n"
                 );
     }
 }

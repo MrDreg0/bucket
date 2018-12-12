@@ -8,26 +8,31 @@ namespace Shop
 {
     public class Cart
     {
-        private List<CartItem> CartItems = new List<CartItem>();
-        private ProductCatalog _catalog;
-
-        public Cart()
-        {
-        }
+        private List<CartItem> _cartItems = new List<CartItem>();
+        private readonly ProductCatalog _catalog;
+        private decimal sumCost = 0;
+        private int sumAmount = 0;
 
         public Cart(ProductCatalog catalog)
         {
-            _catalog = catalog;
+            if (catalog == null)
+            {
+                throw new ArgumentNullException(nameof(catalog), "Вы не выбрали каталого товаров.");
+            }
+            else
+            {
+                _catalog = catalog;
+            }
         }
 
-        public void AddToCartByKey(Guid findKey = default, string findID = "")
+        public void AddItemByKey(Guid productKey = default, string findID = "")
         {
-            if (findKey.Equals(Guid.Empty) && String.IsNullOrEmpty(findID))
+            if (productKey == default && string.IsNullOrEmpty(findID))
             {
                 Console.WriteLine("Вы ничего не ввели.");
                 return;
             }
-            var itemInProductCatalog = _catalog.TryGetFromProductCatalog(findKey, findID);
+            var itemInProductCatalog = _catalog.TryGetFromProductCatalog(productKey, findID);
 
             if (itemInProductCatalog == null)
             {
@@ -35,28 +40,27 @@ namespace Shop
                 return;
             }
 
-            var productInCart = TryGetFromCart(findKey, findID);
+            var productInCart = TryGetItemIndex(productKey, findID);
 
             if (productInCart > -1)
             {
-                CartItems[productInCart].IncrementAmount();
-                Console.WriteLine("\nТовар добавлен!\n");
+                IncrementItemAmount(_cartItems[productInCart].Key);
                 return;
             }
-            AddToCart(itemInProductCatalog);
+            AddItem(itemInProductCatalog);
         }
 
-        private void AddToCart(Product product)
+        private void AddItem(Product product)
         {
             var Item = new CartItem
             (
-                product._key,
-                product._title,
-                product._price,
-                product._id
+                product.Key,
+                product.Title,
+                product.Price,
+                product.Id
             );
             Item.IncrementAmount();
-            CartItems.Add(Item);
+            _cartItems.Add(Item);
             Console.WriteLine("\nТовар добавлен!\n");
         }
 
@@ -68,23 +72,23 @@ namespace Shop
                 return;
             }
 
-            var item = TryGetFromCart(findKey);
+            var item = TryGetItemIndex(findKey);
             if (item == -1)
             {
                 Console.WriteLine("\nТовар не найден\n");
                 return;
             }
-            CartItems.Remove(CartItems[item]);
+            _cartItems.Remove(_cartItems[item]);
             Console.WriteLine("\nТовар удален\n");
         }
 
-        public int TryGetFromCart(Guid findKey, string findId = "")
+        public int TryGetItemIndex(Guid findKey, string findId = "")
         {
-            foreach (var product in CartItems)
+            foreach (var cardItem in _cartItems)
             {
-                if (findKey == product._key || findId == product._id)
+                if (findKey == cardItem.Key || findId == cardItem.Id)
                 {
-                    return CartItems.IndexOf(product);
+                    return _cartItems.IndexOf(cardItem);
                 }
             }
             return -1;
@@ -92,19 +96,19 @@ namespace Shop
 
         public void ShowCart()
         {
-            if (CartItems.Count() == 0)
+            if (_cartItems.Count() == 0)
             {
                 Console.WriteLine("\nВ корзине нет товаров.");
                 return;
             }
 
-            var sumCost = 0M;
-            var sumAmount = 0;
+            sumCost = 0;
+            sumAmount = 0;
 
-            foreach (var item in CartItems)
+            foreach (var item in _cartItems)
             {
-                sumCost += item._cost;
-                sumAmount += item._amount;
+                sumCost += item.Cost;
+                sumAmount += item.Amount;
                 item.ShowCartItem();
             }
             Console.WriteLine
@@ -115,17 +119,17 @@ namespace Shop
                 );
         }
 
-        public void ChangeInCart(Guid findKey)
+        public void IncrementItemAmount(Guid findKey)
         {
-            if (findKey.Equals(Guid.Empty))
+            if (findKey == default)
             {
                 Console.WriteLine("Вы ничего не ввели.");
                 return;
             }
 
-            foreach (var product in CartItems)
+            foreach (var product in _cartItems)
             {
-                if (findKey == product._key)
+                if (findKey == product.Key)
                 {
                     product.IncrementAmount();
                     Console.WriteLine("Товар добавлен");
@@ -136,7 +140,7 @@ namespace Shop
 
         public void ClearCart()
         {
-            CartItems.Clear();
+            _cartItems.Clear();
         }
     }
 }

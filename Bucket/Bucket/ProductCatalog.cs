@@ -8,57 +8,53 @@ namespace Shop
 {
     public class ProductCatalog
     {
-        public ProductCatalog()
-        {
-        }
-
-        private readonly List<Product> ProductsCatalog = new List<Product>()
+        private readonly List<Product> _products = new List<Product>()
         {
             new Product
             {
-                _title = "CD disk",
-                _description = "Size 700mb",
-                _price = 140,
-                _stock = 17,
-                _id = "1"
+                Title = "CD disk",
+                Description = "Size 700mb",
+                Price = 140,
+                Stock = 17,
+                Id = "1"
             },
             new Product
             {
-                _title = "PC",
-                _description = "Core 2 DUO",
-                _price = 20000,
-                _stock = 4,
-                _id = "2"
+                Title = "PC",
+                Description = "Core 2 DUO",
+                Price = 20000,
+                Stock = 4,
+                Id = "2"
             },
             new Product
             {
-                _title = "Smartphone",
-                _description = "Xiaomi Mi A2",
-                _price = 14000,
-                _stock = 1000,
-                _id = "3"
+                Title = "Smartphone",
+                Description = "Xiaomi Mi A2",
+                Price = 14000,
+                Stock = 1000,
+                Id = "3"
             },
             new Product
             {
-                _title = "Lamp",
-                _description = "LED lamp Philips",
-                _price = 150,
-                _stock = 70,
-                _id = "4"
+                Title = "Lamp",
+                Description = "LED lamp Philips",
+                Price = 150,
+                Stock = 70,
+                Id = "4"
             },
             new Product
             {
-                _title = "Pen",
-                _description = "Blue pen",
-                _price = 3,
-                _stock = 1000000,
-                _id = "5"
+                Title = "Pen",
+                Description = "Blue pen",
+                Price = 3,
+                Stock = 1000000,
+                Id = "5"
             }
         };
 
         public void SearchProducts(string substring)
         {
-            if (substring.Length == 0)
+            if (string.IsNullOrEmpty(substring))
             {
                 Console.WriteLine("Вы ничего не ввели.");
                 return;
@@ -66,9 +62,9 @@ namespace Shop
 
             var foundProduct = new List<Product>();
 
-            foreach (var product in ProductsCatalog)
+            foreach (var product in _products)
             {
-                if (product._title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
+                if (product.Title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
                     foundProduct.Add(product);
                 }
@@ -88,9 +84,9 @@ namespace Shop
 
         public Product TryGetFromProductCatalog(Guid findKey, string findId = "")
         {
-            foreach (var product in ProductsCatalog)
+            foreach (var product in _products)
             {
-                if (findKey == product._key || findId == product._id)
+                if (findKey == product.Key || findId == product.Id)
                 {
                     return product;
                 }
@@ -100,7 +96,7 @@ namespace Shop
 
         public void ShowProductCatalog()
         {
-            foreach (var currentProduct in ProductsCatalog)
+            foreach (var currentProduct in _products)
             {
                 currentProduct.ShowProduct();
             }
