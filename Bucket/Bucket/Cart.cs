@@ -10,8 +10,30 @@ namespace Shop
     {
         private List<CartItem> _cartItems = new List<CartItem>();
         private readonly ProductCatalog _catalog;
-        private decimal sumCost = 0;
-        private int sumAmount = 0;
+        private decimal TotalCost
+        {
+            get
+            {
+                var totalCost = 0M;
+                foreach (var item in _cartItems)
+                {
+                    totalCost += item.Cost;
+                }
+                return totalCost;
+            }
+        }
+        private int TotalAmount
+        {
+            get
+            {
+                var totalAmount = 0;
+                foreach (var item in _cartItems)
+                {
+                    totalAmount += item.Amount;
+                }
+                return totalAmount;
+            }
+        }
 
         public Cart(ProductCatalog catalog)
         {
@@ -101,21 +123,15 @@ namespace Shop
                 Console.WriteLine("\nВ корзине нет товаров.");
                 return;
             }
-
-            sumCost = 0;
-            sumAmount = 0;
-
             foreach (var item in _cartItems)
             {
-                sumCost += item.Cost;
-                sumAmount += item.Amount;
                 item.ShowCartItem();
             }
             Console.WriteLine
                 (
                     $"-------------------------------------------" +
-                    $"\nКоличество товаров в корзине: " + sumAmount +
-                    $"\nОбщая стоимость: " + sumCost + "\n"
+                    $"\nКоличество товаров в корзине: " + TotalAmount +
+                    $"\nОбщая стоимость: " + TotalCost + "\n"
                 );
         }
 
