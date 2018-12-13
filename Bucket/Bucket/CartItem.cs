@@ -1,19 +1,22 @@
 ﻿using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Shop
 {
-    public class ProductBucket
+    public class CartItem
     {
         public Guid Key { get; set; }
         public string Id { get; set; }
-        public string Title { get; set; }
-        public decimal Price { get; set; }
+        private string Title { get; set; }
+        private decimal Price { get; set; }
         public int Amount { get; set; }
         public decimal Cost => Amount * Price;
-        public DateTime Date { get; } = DateTime.Now; 
+        private DateTime Date { get; } = DateTime.Now;
 
-        public ProductBucket(Guid key = new Guid(), string title = "empty", decimal price = 0, string id = "")
+        public CartItem (Guid key = default, string title = "empty", decimal price = 0, string id = "")
         {
             Key = key;
             Title = title;
@@ -21,23 +24,18 @@ namespace Shop
             Id = id;
         }
 
-        public void ShowProductBucket()
-        {
+        public void ShowCartItem() =>
             Console.WriteLine
                 (
                 $"\nКлюч: {Key}\n" +
                 $"Название: {Title} \n" +
-                $"Цена: {Price:C}p \n" +
+                $"Цена: {Price:C} \n" +
                 $"Количество: {Amount}шт \n" +
                 $"Стоимость: {Cost:C} \n" +
                 $"Дата добавления: {Date} \n"
                 );
-        }
-
-        public int IncrementAmount()
-        {
-            Amount += 1;
-            return Amount;
-        }
+       
+        public int IncrementAmount() =>        
+            Amount += 1;    
     }
 }

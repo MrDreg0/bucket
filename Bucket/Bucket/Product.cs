@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +24,7 @@ namespace Shop
             Id = id;
         }
 
-        public void ShowProduct()
-        {
+        public void ShowProduct() =>
             Console.WriteLine
                 (
                 $"Название: {Title} \n" +
@@ -36,6 +34,5 @@ namespace Shop
                 $"Ключ: {Key}\n" +
                 $"ID: {Id} \n"
                 );
-        }
     }
 }
