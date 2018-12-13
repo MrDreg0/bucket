@@ -82,7 +82,7 @@ namespace Shop
             }
         }
 
-        public Product TryGetFromProductCatalog(Guid findKey, string findId = "")
+        public Product TryGetProduct(Guid findKey, string findId = "")
         {
             foreach (var product in _products)
             {

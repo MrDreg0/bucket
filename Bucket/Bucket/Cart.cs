@@ -8,7 +8,7 @@ namespace Shop
 {
     public class Cart
     {
-        private List<CartItem> _cartItems = new List<CartItem>();
+        private readonly List<CartItem> _cartItems = new List<CartItem>();
         private readonly ProductCatalog _catalog;
         private decimal TotalCost
         {
@@ -37,14 +37,7 @@ namespace Shop
 
         public Cart(ProductCatalog catalog)
         {
-            if (catalog == null)
-            {
-                throw new ArgumentNullException(nameof(catalog), "Вы не выбрали каталого товаров.");
-            }
-            else
-            {
-                _catalog = catalog;
-            }
+            _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog), "Вы не выбрали каталог товаров.");
         }
 
         public void AddItemByKey(Guid productKey = default, string findID = "")
@@ -54,7 +47,7 @@ namespace Shop
                 Console.WriteLine("Вы ничего не ввели.");
                 return;
             }
-            var itemInProductCatalog = _catalog.TryGetFromProductCatalog(productKey, findID);
+            var itemInProductCatalog = _catalog.TryGetProduct(productKey, findID);
 
             if (itemInProductCatalog == null)
             {
