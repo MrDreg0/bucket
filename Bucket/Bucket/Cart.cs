@@ -14,24 +14,14 @@ namespace Shop
         {
             get
             {
-                var totalCost = 0M;
-                foreach (var item in _cartItems)
-                {
-                    totalCost += item.Cost;
-                }
-                return totalCost;
+                return _cartItems.Sum(item => item.Cost);
             }
         }
         private int TotalAmount
         {
             get
             {
-                var totalAmount = 0;
-                foreach (var item in _cartItems)
-                {
-                    totalAmount += item.Amount;
-                }
-                return totalAmount;
+                return _cartItems.Sum(item => item.Amount);
             }
         }
 

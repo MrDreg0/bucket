@@ -60,15 +60,7 @@ namespace Shop
                 return;
             }
 
-            var foundProduct = new List<Product>();
-
-            foreach (var product in _products)
-            {
-                if (product.Title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
-                {
-                    foundProduct.Add(product);
-                }
-            }
+            var foundProduct = _products.Where(product => product.Title.Contains(substring));
 
             if (foundProduct.Count() == 0)
             {
