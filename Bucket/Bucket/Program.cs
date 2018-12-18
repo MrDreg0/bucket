@@ -14,6 +14,7 @@ namespace Shop
             ConsoleKeyInfo cki;
             var productCatalog = new ProductCatalog();
             var cart = new Cart(productCatalog);
+            var collection = new Collections();
 
             ShowMenu();
 
@@ -67,6 +68,10 @@ namespace Shop
                         Console.WriteLine("\nКорзина очищена\n");
                         break;
 
+                    case "9":
+                        collection.ExampleDictionary();
+                        break;
+
                     case "0":
                         ShowMenu();
                         break;
@@ -85,6 +90,7 @@ namespace Shop
                 $"'6' Удалить товар по ключу\n" +
                 $"'7' Добавить товар по ключу\n" +
                 $"'8' Очистить корзину\n" +
+                $"'9' Показать коллекцию\n" +
                 $"'0' Показать меню\n" +
                 $"\n*****************************"
             );
