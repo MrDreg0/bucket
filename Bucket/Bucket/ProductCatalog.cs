@@ -60,15 +60,7 @@ namespace Shop
                 return;
             }
 
-            var foundProduct = new List<Product>();
-
-            foreach (var product in _products)
-            {
-                if (product.Title.IndexOf(substring, StringComparison.InvariantCultureIgnoreCase) > -1)
-                {
-                    foundProduct.Add(product);
-                }
-            }
+            var foundProduct = _products.Where(product => product.Title.Contains(substring));
 
             if (foundProduct.Count() == 0)
             {
@@ -77,9 +69,7 @@ namespace Shop
             }
             Console.WriteLine("\nНайдено товаров: {0} \n", foundProduct.Count());
             foreach (Product product in foundProduct)
-            {
                 product.ShowProduct();
-            }
         }
 
         public Product TryGetProduct(Guid findKey, string findId = "")
@@ -97,9 +87,7 @@ namespace Shop
         public void ShowProductCatalog()
         {
             foreach (var currentProduct in _products)
-            {
                 currentProduct.ShowProduct();
-            }
         }
     }
 }

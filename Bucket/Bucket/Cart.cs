@@ -10,30 +10,10 @@ namespace Shop
     {
         private readonly List<CartItem> _cartItems = new List<CartItem>();
         private readonly ProductCatalog _catalog;
-        private decimal TotalCost
-        {
-            get
-            {
-                var totalCost = 0M;
-                foreach (var item in _cartItems)
-                {
-                    totalCost += item.Cost;
-                }
-                return totalCost;
-            }
-        }
+        private decimal TotalCost 
+            => _cartItems.Sum(item => item.Cost);
         private int TotalAmount
-        {
-            get
-            {
-                var totalAmount = 0;
-                foreach (var item in _cartItems)
-                {
-                    totalAmount += item.Amount;
-                }
-                return totalAmount;
-            }
-        }
+            => _cartItems.Sum(item => item.Amount);
 
         public Cart(ProductCatalog catalog)
         {
@@ -117,9 +97,7 @@ namespace Shop
                 return;
             }
             foreach (var item in _cartItems)
-            {
                 item.ShowCartItem();
-            }
             Console.WriteLine
                 (
                     $"-------------------------------------------" +
