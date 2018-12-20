@@ -69,9 +69,7 @@ namespace Shop
             }
             Console.WriteLine("\nНайдено товаров: {0} \n", foundProduct.Count());
             foreach (Product product in foundProduct)
-            {
                 product.ShowProduct();
-            }
         }
 
         public Product TryGetProduct(Guid findKey, string findId = "")
@@ -89,9 +87,7 @@ namespace Shop
         public void ShowProductCatalog()
         {
             foreach (var currentProduct in _products)
-            {
                 currentProduct.ShowProduct();
-            }
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Shop
                         break;
 
                     case "9":
-                        collection.ExampleDictionary();
+                        collection.ExampleList();
                         break;
 
                     case "0":
